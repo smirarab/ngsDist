@@ -68,6 +68,7 @@ void parse_cmd_args(params* pars, int argc, char** argv) {
       {"call_thresh", required_argument, NULL, 'C'},
       {"pairwise_del", no_argument, NULL, 'D'},
       {"avg_nuc_dist", no_argument, NULL, 'd'},
+      {"avg_theta", no_argument, NULL, 't'},
       {"evol_model", required_argument, NULL, 'm'},
       {"indep_geno", no_argument, NULL, 'I'},
       {"n_boot_rep", required_argument, NULL, 'b'},
@@ -80,7 +81,7 @@ void parse_cmd_args(params* pars, int argc, char** argv) {
     };
   
   int c = 0;
-  while ( (c = getopt_long_only(argc, argv, "g:pln:s:S:a:A:L:H:cN:C:Ddm:Ib:B:o:x:V:r:", long_options, NULL)) != -1 )
+  while ( (c = getopt_long_only(argc, argv, "g:pln:s:S:a:A:L:H:cN:C:Ddtm:Ib:B:o:x:V:r:", long_options, NULL)) != -1 )
     switch (c) {
     case 'g':
       pars->in_geno = optarg;
@@ -132,8 +133,13 @@ void parse_cmd_args(params* pars, int argc, char** argv) {
       pars->pairwise_del = true;
       break;
     case 'd':
-      // Freedman AH et al. 2014 (eq 8.2)
       pars->score[1][1] = 0.5;
+      break;
+    case 't':
+      // Theta
+      pars->score[0][1] = pars->score[1][0] = pars->score[1][2] = pars->score[2][1] = 4.0/3.0; 
+      pars->score[1][1] = 16.0/9.0;
+      pars->score[0][2] = pars->score[2][0] = 16.0/9.0; 
       break;
     case 'm':
       pars->evol_model = atol(optarg);
