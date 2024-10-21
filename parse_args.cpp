@@ -68,7 +68,7 @@ void parse_cmd_args(params* pars, int argc, char** argv) {
       {"call_thresh", required_argument, NULL, 'C'},
       {"pairwise_del", no_argument, NULL, 'D'},
       {"avg_nuc_dist", no_argument, NULL, 'd'},
-      {"avg_theta", no_argument, NULL, 't'},
+      {"avg_pi", no_argument, NULL, 't'},
       {"evol_model", required_argument, NULL, 'm'},
       {"indep_geno", no_argument, NULL, 'I'},
       {"n_boot_rep", required_argument, NULL, 'b'},
@@ -136,7 +136,7 @@ void parse_cmd_args(params* pars, int argc, char** argv) {
       pars->score[1][1] = 0.5;
       break;
     case 't':
-      // Theta
+      // Pi (Nei and Li, 1979)
       pars->score[0][1] = pars->score[1][0] = pars->score[1][2] = pars->score[2][1] = 4.0/3.0; 
       pars->score[1][1] = 16.0/9.0;
       pars->score[0][2] = pars->score[2][0] = 16.0/9.0; 
@@ -172,7 +172,7 @@ void parse_cmd_args(params* pars, int argc, char** argv) {
 
   if(pars->verbose >= 1) {
     fprintf(stderr, "==> Input Arguments:\n");
-    fprintf(stderr, "\tgeno: %s\n\tprobs: %s\n\tlog_scale: %s\n\tn_ind: %lu\n\tn_sites: %lu\n\ttot_sites: %lu\n\tlabels: %s (%s header)\n\tpositions: %s (%s header)\n\tcall_geno: %s\n\tN_thresh: %f\n\tcall_thresh: %f\n\tpairwise_del: %s\n\tavg_nuc_dist: %s\n\tevol_model: %s\n\tgeno_indep: %s\n\tn_boot_rep: %lu\n\tboot_block_size: %lu\n\tout: %s\n\tn_threads: %d\n\tverbose: %d\n\tseed: %d\n\tversion: %s (%s @ %s)\n\n",
+    fprintf(stderr, "\tgeno: %s\n\tprobs: %s\n\tlog_scale: %s\n\tn_ind: %lu\n\tn_sites: %lu\n\ttot_sites: %lu\n\tlabels: %s (%s header)\n\tpositions: %s (%s header)\n\tcall_geno: %s\n\tN_thresh: %f\n\tcall_thresh: %f\n\tpairwise_del: %s\n\tavg_nuc_dist: %s\n\tpi: %s\n\tevol_model: %s\n\tgeno_indep: %s\n\tn_boot_rep: %lu\n\tboot_block_size: %lu\n\tout: %s\n\tn_threads: %d\n\tverbose: %d\n\tseed: %d\n\tversion: %s (%s @ %s)\n\n",
 	    pars->in_geno,
 	    pars->in_probs ? "true":"false",
 	    pars->in_logscale ? "true":"false",
@@ -188,6 +188,7 @@ void parse_cmd_args(params* pars, int argc, char** argv) {
 	    pars->call_thresh,
 	    pars->pairwise_del ? "true":"false",
 	    pars->score[1][1] == 0.5 ? "true":"false",
+	    pars->score[1][1] ==  16.0/9.0 ? "true":"false",
 	    evol_model[pars->evol_model],
 	    pars->indep_geno ? "true":"false",
 	    pars->n_boot_rep,
