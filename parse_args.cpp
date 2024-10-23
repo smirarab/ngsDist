@@ -69,6 +69,7 @@ void parse_cmd_args(params* pars, int argc, char** argv) {
       {"pairwise_del", no_argument, NULL, 'D'},
       {"avg_nuc_dist", no_argument, NULL, 'd'},
       {"avg_pi", no_argument, NULL, 't'},
+      {"theta", no_argument, NULL, 'T'},
       {"evol_model", required_argument, NULL, 'm'},
       {"indep_geno", no_argument, NULL, 'I'},
       {"n_boot_rep", required_argument, NULL, 'b'},
@@ -137,9 +138,15 @@ void parse_cmd_args(params* pars, int argc, char** argv) {
       break;
     case 't':
       // Pi (Nei and Li, 1979)
-      pars->score[0][1] = pars->score[1][0] = pars->score[1][2] = pars->score[2][1] = 4.0/3.0; 
-      pars->score[1][1] = 16.0/9.0;
-      pars->score[0][2] = pars->score[2][0] = 16.0/9.0; 
+      pars->score[0][1] = pars->score[1][0] = pars->score[1][2] = pars->score[2][1] = 2.0; 
+      pars->score[1][1] = 3/2.0;
+      pars->score[0][2] = pars->score[2][0] = 3.0/2.0; 
+      break;
+    case 'T':
+      // My work
+      pars->score[0][1] = pars->score[1][0] = pars->score[1][2] = pars->score[2][1] = 33.0/24.0; 
+      pars->score[1][1] = 33.0/9.0;
+      pars->score[0][2] = pars->score[2][0] = 33.0/9.0; 
       break;
     case 'm':
       pars->evol_model = atol(optarg);
@@ -217,9 +224,9 @@ void parse_cmd_args(params* pars, int argc, char** argv) {
     error(__FUNCTION__, "cannot specify total number of sites (--tot_sites) with pairwise deletion (--pairwise_del)!");
   if(pars->call_geno && !pars->in_probs)
     error(__FUNCTION__, "can only call genotypes from likelihoods/probabilities!");
-  if(pars->evol_model < 0 || pars->evol_model > 6)
+  if(pars->evol_model < 0 || pars->evol_model > 7)
     error(__FUNCTION__, "invalid correction method specified!");
-  if(pars->evol_model > 2 && pars->in_pos == NULL)
+  if(pars->evol_model > 2 && pars->evol_model < 7 && pars->in_pos == NULL)
     error(__FUNCTION__, "use of more complex evolutionary models requires position information!");
   if(pars->out == NULL)
     error(__FUNCTION__, "output prefix (--out) missing!");

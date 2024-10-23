@@ -21,6 +21,7 @@
 
 #include "ngsDist.hpp"
 #include "emOptim2.cpp"
+#include <math.h>
 
 char const* version = "1.0.10";
 
@@ -396,6 +397,8 @@ double gen_dist(params *p, uint64_t i1, uint64_t i2){
   } else if(p->evol_model == 6) {
     // TN93
     error(__FUNCTION__, "TN93 model not yet supported");
+  } else if(p->evol_model == 7) {
+    dist = pow(1.-(1.-dist),(6./11));
   } else {
     error(__FUNCTION__, "invalid evolutionary model specified!");
   }
